@@ -42,7 +42,13 @@ app.post("/recommend", function (req, res) {
 })
 
 app.get("/restaurants", function (req, res) {
-    res.render("restaurants")
+    const pathName = path.join(__dirname, "data", "restaurants.json")
+    const fileData = fs.readFileSync(pathName)
+    const storedRestaurants = JSON.parse(fileData)
+
+    res.render("restaurants", {numRestaurants: storedRestaurants.length,
+        restaurants: storedRestaurants
+    })
 })
 
 
