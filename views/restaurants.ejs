@@ -51,34 +51,65 @@
   <main>
     <h1>Recommended restaurants</h1>
     <p>Find your next favorite restaurants with help of our other users!</p>
-    <p>
-      <%= numRestaurants %> Restaurants Found!
-    </p>
-    <ul id="restaurants-list">
-      <% for (restaurant of restaurants) { %>
-        <li class="restaurant-item">
-          <article>
-            <h2>
-              <%= restaurant.name %>
-            </h2>
-            <div class="restaurant-meta">
+    <% if (numRestaurants <=0) { %>
+      <p>Unfortunately, no restaurants have been recommended yet. Be the first?</p>
+      <% } else if (numRestaurants===1) { %>
+        <p>
+          1 Restaurant Found!
+        </p>
+        <ul id="restaurants-list">
+          <li class="restaurant-item">
+            <article>
+              <h2>
+                <%= restaurants[0].name %>
+              </h2>
+              <div class="restaurant-meta">
+                <p>
+                  <%= restaurants[0].cuisine %>
+                </p>
+                <p>
+                  <%= restaurants[0].address %>
+                </p>
+              </div>
               <p>
-                <%= restaurant.cuisine %>
+                <%= restaurants[0].description %>
               </p>
-              <p>
-                <%= restaurant.address %>
-              </p>
-            </div>
-            <p>
-              <%= restaurant.description %>
-            </p>
-            <div class="restaurant-actions">
-              <a href="<%= restaurant.website %>">View Website</a>
-            </div>
-          </article>
-        </li>
-        <% } %>
-    </ul>
+              <div class="restaurant-actions">
+                <a href="<%= restaurants[0].website %>">View Website</a>
+              </div>
+            </article>
+          </li>
+        </ul>
+        <% } else {%>
+          <p>
+            <%= numRestaurants %> Restaurants Found!
+          </p>
+          <ul id="restaurants-list">
+            <% for (restaurant of restaurants) { %>
+              <li class="restaurant-item">
+                <article>
+                  <h2>
+                    <%= restaurant.name %>
+                  </h2>
+                  <div class="restaurant-meta">
+                    <p>
+                      <%= restaurant.cuisine %>
+                    </p>
+                    <p>
+                      <%= restaurant.address %>
+                    </p>
+                  </div>
+                  <p>
+                    <%= restaurant.description %>
+                  </p>
+                  <div class="restaurant-actions">
+                    <a href="<%= restaurant.website %>">View Website</a>
+                  </div>
+                </article>
+              </li>
+              <% } %>
+          </ul>
+          <% } %>
   </main>
 </body>
 
