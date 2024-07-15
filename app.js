@@ -1,33 +1,48 @@
 const express = require("express")
 const path = require("path")
+const fs = require("fs")
 const app = express()
 
-app.use(express.static("public"))
+// Template enabling done through ejs
+app.set("views", path.join(__dirname, "views"))
+app.set("view engine", "ejs")
+
+app.use(express.static("public")) // "Publicizes" styles and scripts
+app.use(express.urlencoded({extended: false}))
 
 
+// Renders through ejs
 app.get("/about", function (req, res) {
-    const pathName = path.join(__dirname, "views", "about.html")
-    res.sendFile(pathName)
+    res.render("about")
 })
 
 app.get("/confirm", function (req, res) {
-    const pathName = path.join(__dirname, "views", "confirm.html")
-    res.sendFile(pathName)
+    res.render("confirm")
 })
 
 app.get("/", function (req, res) {
-    const pathName = path.join(__dirname, "views", "index.html")
-    res.sendFile(pathName)
+    res.render("index")
 })
 
 app.get("/recommend", function (req, res) {
-    const pathName = path.join(__dirname, "views", "recommend.html")
-    res.sendFile(pathName)
+    res.render("recommend")
+})
+
+app.post("/recommend", function (req, res) {
+    const pathName = path.join(__dirname, "data", "restaurants.json")
+    const restaurant = req.body
+
+    const fileData = fs.readFileSync(pathName)
+    const storedRestaurants = JSON.parse(fileData)
+    storedRestaurants.push(restaurant)
+
+    fs.writeFileSync(pathName, JSON.stringify(storedRestaurants))
+
+    res.redirect("/confirm")
 })
 
 app.get("/restaurants", function (req, res) {
-    const pathName = path.join(__dirname, "views", "restaurants.html")
-    res.sendFile(pathName)
+    res.render("restaurants")
 })
 
 
