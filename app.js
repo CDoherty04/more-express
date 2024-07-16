@@ -8,7 +8,7 @@ app.set("views", path.join(__dirname, "views"))
 app.set("view engine", "ejs")
 
 app.use(express.static("public")) // "Publicizes" styles and scripts
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({ extended: false }))
 
 
 // Renders through ejs
@@ -46,7 +46,8 @@ app.get("/restaurants", function (req, res) {
     const fileData = fs.readFileSync(pathName)
     const storedRestaurants = JSON.parse(fileData)
 
-    res.render("restaurants", {numRestaurants: storedRestaurants.length,
+    res.render("restaurants", {
+        numRestaurants: storedRestaurants.length,
         restaurants: storedRestaurants
     })
 })
