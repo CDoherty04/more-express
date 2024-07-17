@@ -1,6 +1,7 @@
 const express = require("express")
 const path = require("path")
 const fs = require("fs")
+const uuid = require("uuid")
 const app = express()
 
 // Template enabling done through ejs
@@ -31,6 +32,7 @@ app.get("/recommend", function (req, res) {
 app.post("/recommend", function (req, res) {
     const pathName = path.join(__dirname, "data", "restaurants.json")
     const restaurant = req.body
+    restaurant.id = uuid.v7()
 
     const fileData = fs.readFileSync(pathName)
     const storedRestaurants = JSON.parse(fileData)
@@ -53,8 +55,17 @@ app.get("/restaurants", function (req, res) {
 })
 
 app.get("/restaurants/:id", function (req, res) {
+    const pathName = path.join(__dirname, "data", "restaurants.json")
+    const fileData = fs.readFileSync(pathName)
+    const storedRestaurants = JSON.parse(fileData)
+
     const restaurantId = req.params.id
-    res.render("restaurant-details", { rid: restaurantId })
+
+    for (const restaurant of storedRestaurants) {
+        if (restaurantId === restaurant.id) {
+            return res.render("restaurant-details", { restaurant: restaurant })
+        }
+    }
 })
 
 app.listen(3000)
