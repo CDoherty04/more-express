@@ -2,6 +2,8 @@ const express = require("express")
 const path = require("path")
 const fs = require("fs")
 const uuid = require("uuid")
+
+const restaurantData = require("./utility/restaurant-data")
 const app = express()
 
 // Template enabling done through ejs
@@ -30,38 +32,30 @@ app.get("/recommend", function (req, res) {
 })
 
 app.post("/recommend", function (req, res) {
-    const pathName = path.join(__dirname, "data", "restaurants.json")
-    const restaurant = req.body
-    restaurant.id = uuid.v7()
+    const restaurants = restaurantData.getRestaurants()
+    const newRestaurant = req.body
+    newRestaurant.id = uuid.v7()
 
-    const fileData = fs.readFileSync(pathName)
-    const storedRestaurants = JSON.parse(fileData)
-    storedRestaurants.push(restaurant)
-
-    fs.writeFileSync(pathName, JSON.stringify(storedRestaurants))
+    restaurants.push(newRestaurant)
+    restaurantData.writeRestaurants(restaurants)
 
     res.redirect("/confirm")
 })
 
 app.get("/restaurants", function (req, res) {
-    const pathName = path.join(__dirname, "data", "restaurants.json")
-    const fileData = fs.readFileSync(pathName)
-    const storedRestaurants = JSON.parse(fileData)
+    const restaurants = restaurantData.getRestaurants()
 
     res.render("restaurants", {
-        numRestaurants: storedRestaurants.length,
-        restaurants: storedRestaurants
+        numRestaurants: restaurants.length,
+        restaurants: restaurants
     })
 })
 
 app.get("/restaurants/:id", function (req, res) {
-    const pathName = path.join(__dirname, "data", "restaurants.json")
-    const fileData = fs.readFileSync(pathName)
-    const storedRestaurants = JSON.parse(fileData)
-
+    const restaurants = restaurantData.getRestaurants()
     const restaurantId = req.params.id
 
-    for (const restaurant of storedRestaurants) {
+    for (const restaurant of restaurants) {
         if (restaurantId === restaurant.id) {
             return res.render("restaurant-details", { restaurant: restaurant })
         }
@@ -70,12 +64,12 @@ app.get("/restaurants/:id", function (req, res) {
     res.status(404).render("404")
 })
 
-app.use(function(req, res) {
+app.use(function (req, res) {
     res.status(404).render("404")
 })
 
-app.use(function(error, req, res, next) {
+app.use(function (error, req, res, next) {
     res.status(500).render("500")
 })
 
-app.listen(3001)
+app.listen(3000)
