@@ -20,6 +20,10 @@
     <p>
       <%= numRestaurants %> Restaurants Found!
     </p>
+    <form action="/restaurants" method="get">
+      <input type="hidden" name="order" id="order-input" value=<%= nextOrder %>>
+      <button class="btn">Change Order</button>
+    </form>
     <ul id="restaurants-list">
       <% for (restaurant of restaurants) { %>
       <%- include("includes/restaurants/restaurant-item") %>

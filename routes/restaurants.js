@@ -17,9 +17,31 @@ router.post("/recommend", function (req, res) {
 router.get("/restaurants", function (req, res) {
     const restaurants = restaurantData.getRestaurants()
 
+    let order = req.query.order
+    let nextOrder = "desc"
+
+    if (order !== "asc" && order !== "desc") {
+        order = "asc"
+    }
+
+    if (order === "asc") {
+        nextOrder = "desc"
+    } else {
+        nextOrder = "asc"
+    }
+
+    restaurants.sort(function (resA, resB) {
+        if (order === "asc" && resA.name > resB.name ||
+            order === "desc" && resA.name < resB.name) {
+            return 1
+        }
+        return -1
+    })
+
     res.render("restaurants", {
         numRestaurants: restaurants.length,
-        restaurants: restaurants
+        restaurants: restaurants,
+        nextOrder: nextOrder
     })
 })
 
